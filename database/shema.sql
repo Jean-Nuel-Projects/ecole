@@ -6,17 +6,15 @@ CREATE TABLE administrateurs (
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     nom_complet VARCHAR(100) NOT NULL,
-    role ENUM('super_admin', 'admin', 'secretaire') DEFAULT 'admin',
+    role ENUM('super_admin','admin','secretaire') DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE institutions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(150) NOT NULL,
-    niveau ENUM('maternelle', 'primaire', 'secondaire') NOT NULL,
-    adresse TEXT,
-    telephone VARCHAR(20),
-    email VARCHAR(100),
+    niveau ENUM('maternelle','primaire','secondaire') NOT NULL,
+    adresse TEXT, telephone VARCHAR(20), email VARCHAR(100),
     logo VARCHAR(255) DEFAULT '/assets/logo-ecole.png',
     annee_scolaire VARCHAR(9) DEFAULT '2024-2025',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -29,68 +27,47 @@ CREATE TABLE options_secondaire (
     description TEXT
 );
 
--- Classes : juste le niveau, pas d'option
 CREATE TABLE classes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     institution_id INT NOT NULL,
-    nom_classe VARCHAR(50) NOT NULL,
+    nom_classe VARCHAR(100) NOT NULL,
     niveau_detail VARCHAR(50) NOT NULL,
+    option_id INT NULL,
     capacite INT DEFAULT 35,
     FOREIGN KEY (institution_id) REFERENCES institutions(id) ON DELETE CASCADE,
+    FOREIGN KEY (option_id) REFERENCES options_secondaire(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Lie une classe à ses options possibles (secondaire uniquement)
-CREATE TABLE classe_options (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    classe_id INT NOT NULL,
-    option_id INT NOT NULL,
-    capacite INT DEFAULT 35,
-    FOREIGN KEY (classe_id) REFERENCES classes(id) ON DELETE CASCADE,
-    FOREIGN KEY (option_id) REFERENCES options_secondaire(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_classe_option (classe_id, option_id)
-);
-
--- Un élève est dans une classe_option (ou juste une classe si pas d'option)
 CREATE TABLE eleves (
     id INT PRIMARY KEY AUTO_INCREMENT,
     matricule VARCHAR(20) UNIQUE NOT NULL,
-    nom VARCHAR(50) NOT NULL,
-    prenom VARCHAR(50) NOT NULL,
-    date_naissance DATE NOT NULL,
-    genre ENUM('M', 'F') NOT NULL,
-    adresse TEXT,
-    classe_id INT NOT NULL,
-    classe_option_id INT NULL,
-    qr_code TEXT,
-    empreinte_digitale TEXT,
+    nom VARCHAR(50) NOT NULL, prenom VARCHAR(50) NOT NULL,
+    date_naissance DATE NOT NULL, genre ENUM('M','F') NOT NULL,
+    adresse TEXT, classe_id INT NOT NULL,
+    qr_code TEXT, empreinte_digitale TEXT,
     date_inscription DATE NOT NULL,
     FOREIGN KEY (classe_id) REFERENCES classes(id) ON DELETE CASCADE,
-    FOREIGN KEY (classe_option_id) REFERENCES classe_options(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE responsables (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    eleve_id INT NOT NULL,
-    nom_complet VARCHAR(100) NOT NULL,
+    eleve_id INT NOT NULL, nom_complet VARCHAR(100) NOT NULL,
     lien_parente VARCHAR(50) NOT NULL,
-    telephone VARCHAR(20) NOT NULL,
-    email VARCHAR(100),
-    whatsapp VARCHAR(20),
+    telephone VARCHAR(20) NOT NULL, email VARCHAR(100), whatsapp VARCHAR(20),
     FOREIGN KEY (eleve_id) REFERENCES eleves(id) ON DELETE CASCADE
 );
 
 CREATE TABLE presences (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    eleve_id INT NOT NULL,
-    date_presence DATE NOT NULL,
-    statut ENUM('present', 'absent', 'retard', 'excuse') NOT NULL,
-    heure_arrivee TIME,
-    methode_pointage ENUM('QR', 'QR+EMPREINTE', 'MANUEL') DEFAULT 'MANUEL',
+    eleve_id INT NOT NULL, date_presence DATE NOT NULL,
+    statut ENUM('present','absent','retard','excuse','justifie') NOT NULL,
+    heure_arrivee TIME, methode_pointage ENUM('QR','QR+EMPREINTE','MANUEL') DEFAULT 'MANUEL',
+    justification VARCHAR(20) NULL,
     FOREIGN KEY (eleve_id) REFERENCES eleves(id) ON DELETE CASCADE,
     UNIQUE KEY unique_presence (eleve_id, date_presence)
 );
 
 INSERT INTO administrateurs (username, password_hash, nom_complet, role)
-VALUES ('admin', '$2b$10$rQZ5qpT8qFqGJqGTqGNJZuNhXV7qGJoGZHvGqGBqqMGzMGzMGMzMG', 'Administrateur Principal', 'super_admin');
+VALUES ('admin','$2b$10$rQZ5qpT8qFqGJqGTqGNJZuNhXV7qGJoGZHvGqGBqqMGzMGzMGMzMG','Administrateur Principal','super_admin');

@@ -7,6 +7,20 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+//============== IP ==========================
+const os = require('os');
+function getLocalIP() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) return iface.address;
+        }
+    }
+    return 'localhost';
+}
+const LOCAL_IP = getLocalIP();
+console.log(`📡 IP locale : ${LOCAL_IP}`);
+
 // ==================== MIDDLEWARE ====================
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
