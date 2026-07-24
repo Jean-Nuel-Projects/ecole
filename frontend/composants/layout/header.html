@@ -1,0 +1,17 @@
+<header class="main-header">
+  <div class="header-left">
+    <button class="menu-toggle" id="menu-toggle-btn" style="display:none" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <img src="/assets/logo-ecole.png" alt="Logo" style="width:36px;height:36px;border-radius:8px;object-fit:cover;background:white;padding:2px" onerror="this.style.display='none'">
+    <h1>EduManage</h1>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+      <i class="fas fa-moon"></i>
+    </button>
+    <div class="admin-info">
+      <div class="admin-avatar">A</div>
+      <span class="admin-name">Admin</span>
+    </div>
+    <button class="btn-logout" onclick="authService.logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+  </div>
+</header>

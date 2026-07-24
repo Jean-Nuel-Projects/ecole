@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage - Gestion Scolaire</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    <div id="header-container"></div>
+    <div class="main-layout">
+      <div id="sidebar-container"></div>
+      <main class="main-content" id="main-content">
+        <div style="text-align:center;padding:4rem"><div class="spinner"></div><p>Chargement...</p></div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/utils.js"></script>
+  <script src="/js/services/auth.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/component-loader.js"></script>
+  <script src="/js/router.js"></script>
+  <script src="/js/pages/dashboard.js"></script>
+  <script src="/js/pages/profil-eleve.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
