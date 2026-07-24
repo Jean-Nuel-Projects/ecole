@@ -34,6 +34,10 @@ app.use((req, res, next) => {
     next();
 });
 
+// Servir les fichiers statiques (avant les routes)
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
+
 // ==================== ROUTES API ====================
 
 // Import des routes
