@@ -17,24 +17,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Mode test : admin/admin123 sans BDD
-        if (username === 'admin' && password === 'admin123') {
-            const token = jwt.sign(
-                { id: 1, username: 'admin', role: 'admin' },
-                process.env.JWT_SECRET || 'secret_test',
-                { expiresIn: '24h' }
-            );
-
-            return res.json({
-                success: true,
-                token,
-                user: {
-                    id: 1,
-                    username: 'admin',
-                    nom_complet: 'Administrateur',
-                    role: 'admin'
-                }
-            });
-        }
+        if (username === 'admin' && password === 'admin123') {const token = jwt.sign({ id: 1, username: 'admin', role: 'admin' },process.env.JWT_SECRET || 'secret_test',{ expiresIn: '24h' });return res.json({success: true,token,user: {id: 1,username: 'admin',nom_complet: 'Administrateur',role: 'admin'}});}
 
         // Recherche dans la base de données
         try {
