@@ -25,8 +25,8 @@ Plateforme de gestion scolaire moderne pour les établissements de la RDC (Mater
 
 ```bash
 # Cloner le projet
-git clone https://github.com/votre-username/edumanage.git
-cd edumanage
+git clone https://github.com/Jean-TSHIKAKU421/ecole.git
+cd ecole
 
 # Installer les dépendances backend
 cd backend
