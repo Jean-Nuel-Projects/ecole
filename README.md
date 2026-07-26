@@ -25,7 +25,7 @@ Plateforme de gestion scolaire moderne pour les établissements de la RDC (Mater
 
 ```bash
 # Cloner le projet
-git clone https://github.com/Jean-TSHIKAKU421/ecole.git
+git clone https://github.com/Jean-Nuel-Projects/ecole.git
 cd ecole
 
 # Installer les dépendances backend
