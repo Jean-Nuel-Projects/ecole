@@ -14,12 +14,8 @@ class ClasseDetailPage {
   <div id="tab-content"></div></div>`;
         await this.renderTab();
     }
-    async switchTab(tab) { this.tabActif = tab; await this.renderTab(); }
-    async renderTab() {
-        const tc = document.getElementById('tab-content'); if (!tc) return;
-        if (this.tabActif === 'liste') tc.innerHTML = this.tabListe();
-        else tc.innerHTML = this.tabPresences();
-    }
+    async switchTab(tab) {this.tabActif = tab;document.querySelectorAll('.tab-switcher .tab-btn').forEach(btn => btn.classList.remove('active'));document.querySelector(`.tab-switcher .tab-btn[onclick*="${tab}"]`)?.classList.add('active');await this.renderTab();}
+    async renderTab() {const tc = document.getElementById('tab-content'); if (!tc) return;if (this.tabActif === 'liste') tc.innerHTML = this.tabListe();else tc.innerHTML = this.tabPresences();}
 
     tabListe() {
         return `<div class="search-bar" style="margin-bottom:1rem"><div class="input-wrapper"><i class="fas fa-search input-icon"></i><input type="text" class="form-input" id="search-eleves" placeholder="Rechercher par nom ou matricule..." oninput="classeDetail.filtrer()"><button class="search-clear" id="search-eleves-clear" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;display:none" onclick="document.getElementById('search-eleves').value='';classeDetail.filtrer()"><i class="fas fa-times"></i></button></div></div>
@@ -91,21 +87,12 @@ class ClasseDetailPage {
         const clearBtn = document.getElementById('search-eleves-clear');
         if (clearBtn) clearBtn.style.display = q ? '' : 'none';
         let visible = 0;
-        document.querySelectorAll('.eleve-row, .presences-item').forEach(el => {
-            const match = el.dataset.nom?.includes(q) || el.dataset.matricule?.includes(q);
-            el.style.display = match ? '' : 'none';
-            if (match) visible++;
-        });
+        document.querySelectorAll('.eleve-row, .presences-item').forEach(el => {const match = el.dataset.nom?.includes(q) || el.dataset.matricule?.includes(q);el.style.display = match ? '' : 'none';if (match) visible++;});
         const noMatch = document.getElementById('no-match');
-        const container = document.getElementById('liste-container') || document.getElementById('presence-container') || document.getElementById('stats-grid');
-        if (noMatch) noMatch.style.display = q && visible === 0 ? '' : 'none';
-        if (container) container.style.display = q && visible === 0 ? 'none' : '';
-    }
+        const container = document.getElementById('liste-container') || document.getElementById('presence-container') || document.getElementById('stats-grid');if (noMatch) noMatch.style.display = q && visible === 0 ? '' : 'none';if (container) container.style.display = q && visible === 0 ? 'none' : '';
+      }
 
-    async pointer(eleveId, statut) {
-        try { const r=await API.pointerPresence({eleve_id:eleveId,statut,methode_pointage:'MANUEL'}); if(r.success){const e=this.eleves.find(el=>el.id==eleveId);if(e){e.statut=statut;e.justification=null;}await this.renderTab();}else this.ouvrirAlert('Erreur',r.message||'Échec','error'); }
-        catch(e){this.ouvrirAlert('Erreur',e.message,'error');}
-    }
+    async pointer(eleveId, statut) {try { const r=await API.pointerPresence({eleve_id:eleveId,statut,methode_pointage:'MANUEL'}); if(r.success){const e=this.eleves.find(el=>el.id==eleveId);if(e){e.statut=statut;e.justification=null;}await this.renderTab();}else this.ouvrirAlert('Erreur',r.message||'Échec','error'); }catch(e){this.ouvrirAlert('Erreur',e.message,'error');}}
 
     ouvrirJustification(eleveId) {
         const overlay=document.createElement('div');overlay.className='modal-overlay';overlay.id='modal-justif';overlay.style.zIndex='1100';
