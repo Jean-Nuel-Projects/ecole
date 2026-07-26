@@ -8,3 +8,5 @@ sleep 1
 clear
 git push origin main
 echo "Dépôt distant mis à jour avec succès."
+sleep 1
+clear
