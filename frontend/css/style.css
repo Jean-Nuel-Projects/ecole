@@ -71,7 +71,7 @@ a { text-decoration: none; color: inherit; }
 .badge-danger { background: var(--danger-light); color: var(--danger); }
 
 .modal-overlay { position: fixed; inset: 0; background: var(--modal-overlay); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; animation: fadeIn 0.15s;overflow-y: scroll; }
-.modal { background: var(--card-bg); backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: var(--radius-xl); width: 100%; max-width: 500px; box-shadow: 0 16px 48px rgba(0,0,0,0.6); animation: slideUp 0.2s; }
+.modal { background: var(--card-bg); backdrop-filter: blur(30px); border: 1px solid var(--border); border-radius: var(--radius-xl); width: 100%; max-width: 500px; box-shadow: 0 16px 48px rgba(0,0,0,0.6); animation: slideUp 0.2s;}
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem 0; }
 .modal-header h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
 .modal-close { width: 34px; height: 34px; border-radius: 50%; background: var(--input-bg); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
@@ -170,6 +170,26 @@ body.light .badge { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
 .responsable-contacts .btn { font-size: 0.78rem; }
 .contact-moyen { color: var(--text-secondary); display: flex; align-items: center; gap: 0.3rem; }
 .contact-valeur { font-weight: 500; }
+.contact-clickable { text-decoration: none; color: inherit; transition: var(--transition); border-radius: var(--radius-xl); padding: 0.3rem 0.5rem; margin: 0 -0.5rem; }
+.contact-clickable:hover { background: var(--primary-light); }
+.contact-clickable:hover .contact-valeur { color: var(--primary); }
+@keyframes pulse { 0%,100% { opacity:1;transform:scale(1) } 50% { opacity:0.6;transform:scale(1.1) } }
+.calendrier-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.calendrier-day-name { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--text-muted); padding: 0.3rem; }
+.calendrier-day { text-align: center; padding: 0.5rem 0.2rem; border-radius: 6px; font-size: 0.75rem; font-weight: 500; cursor: default; transition: var(--transition); }
+.calendrier-day:hover { transform: scale(1.1); z-index: 1; }
+.calendrier-day.present { background: var(--success); color: white; }
+.calendrier-day.absent { background: var(--danger); color: white; }
+.calendrier-day.retard { background: var(--warning); color: white; }
+.calendrier-day.justifie { background: var(--info); color: white; }
+.calendrier-day.today { box-shadow: 0 0 0 2px var(--primary); }
+.calendrier-day.empty { background: transparent; }
+.calendrier-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; }
+.calendrier-dot.present { background: var(--success); }
+.calendrier-dot.absent { background: var(--danger); }
+.calendrier-dot.retard { background: var(--warning); }
+.calendrier-dot.justifie { background: var(--info); }
+
 @media (max-width: 768px) { .profil-grid-top { grid-template-columns: 1fr; } .responsables-grid { grid-template-columns: 1fr; } }
 
 @media (max-width: 768px) {
