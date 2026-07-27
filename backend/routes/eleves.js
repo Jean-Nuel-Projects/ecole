@@ -25,17 +25,33 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const conn = await pool.getConnection();
     try {
-        const { nom, prenom, date_naissance, genre, adresse, classe_id, classe_option_id, responsables } = req.body;
+        const { nom, prenom, date_naissance, genre, adresse, classe_id, responsables } = req.body;
         const matricule = 'ELV' + Date.now();
-        const qrData = JSON.stringify({ matricule, nom, prenom, classe_id });
-        const qrCode = await QRCode.toDataURL(qrData);
+        let qrCode = '';
+        try { qrCode = await QRCode.toDataURL(JSON.stringify({ matricule, nom, prenom, classe_id })); } catch(e) {}
         await conn.beginTransaction();
-        const [r] = await conn.query('INSERT INTO eleves (matricule, nom, prenom, date_naissance, genre, adresse, classe_id, classe_option_id, qr_code, date_inscription) VALUES (?,?,?,?,?,?,?,?,?,CURDATE())', [matricule, nom, prenom, date_naissance, genre, adresse||null, classe_id, classe_option_id||null, qrCode]);
+        const [r] = await conn.query('INSERT INTO eleves (matricule, nom, prenom, date_naissance, genre, adresse, classe_id, qr_code, date_inscription) VALUES (?,?,?,?,?,?,?,?,CURDATE())', [matricule, nom, prenom, date_naissance, genre, adresse||null, classe_id, qrCode]);
         if (responsables && responsables.length) { for (const resp of responsables) { await conn.query('INSERT INTO responsables (eleve_id, nom_complet, lien_parente, telephone, email, whatsapp) VALUES (?,?,?,?,?,?)', [r.insertId, resp.nom_complet, resp.lien_parente, resp.telephone, resp.email||null, resp.whatsapp||null]); } }
         await conn.commit();
         res.status(201).json({ success: true, data: { id: r.insertId, matricule, qr_code: qrCode } });
     } catch(e) { await conn.rollback(); res.status(500).json({ success: false, error: e.message }); }
     finally { conn.release(); }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const [result] = await pool.query('DELETE FROM eleves WHERE id = ?', [req.params.id]);
+        if (result.affectedRows === 0) return res.status(404).json({ success: false, message: 'Élève non trouvé' });
+        res.json({ success: true, message: 'Élève supprimé avec succès' });
+    } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+router.post('/responsable', async (req, res) => {
+    try {
+        const { eleve_id, nom_complet, lien_parente, telephone, whatsapp, email } = req.body;
+        await pool.query('INSERT INTO responsables (eleve_id, nom_complet, lien_parente, telephone, email, whatsapp) VALUES (?,?,?,?,?,?)', [eleve_id, nom_complet, lien_parente, telephone||null, email||null, whatsapp||null]);
+        res.json({ success: true, message: 'Responsable ajouté' });
+    } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
 module.exports = router;
